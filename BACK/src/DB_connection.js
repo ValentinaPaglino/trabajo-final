@@ -1,6 +1,6 @@
 require('dotenv').config();
-const { Sequelize, DataTypes } = require('sequelize');
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME} = process.env;
+const { Sequelize } = require('sequelize');
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME} = process.env;
 const modeloProducto = require("./models/Producto")
 const mmodeloCategoria=require("./models/Categoria");
  
@@ -20,6 +20,8 @@ Categoria.belongsToMany(Producto,{through:"ProductoCategoria"});
 
 
 module.exports ={ 
+   Producto,
+   Categoria,
    sequelize, 
 ...sequelize.models,
 };
