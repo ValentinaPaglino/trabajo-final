@@ -5,6 +5,7 @@ import SearchBar from './components/SearchBar/SearchBar'
 import { Route, Routes } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Detail from './Views/Detail';
+import Navbar from './components/NavBar/NavBar';
 import PATHROUTES from './helpers/PathRoutes.helper';
 
 import Filtros from './components/Filtros/Filtros';
@@ -51,6 +52,7 @@ function App() {
 
   return (
     <div>
+      <Navbar/> 
       <SearchBar />
       <Filtros onFilterChange={handleFilterChange} onPriceChange={onPriceChange} />
 
