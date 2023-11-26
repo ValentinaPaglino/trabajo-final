@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AddShoppingCart } from '@mui/icons-material';
 import accounting from 'accounting';
+import { Button } from '@mui/material';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -56,7 +57,7 @@ function DetalleDeProducto(props) {
             {accounting.formatMoney (precio_$)}
             </Typography>
         }
-        title={titulo}
+       title={titulo}
         subheader={autor}
       />
       <CardContent>
@@ -78,6 +79,9 @@ function DetalleDeProducto(props) {
         >
           <ExpandMoreIcon />
         </ExpandMore>
+        <Button>
+          <Link to={`/detail/${id}`}> Ver detalle </Link>
+        </Button>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
