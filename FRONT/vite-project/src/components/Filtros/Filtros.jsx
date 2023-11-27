@@ -28,6 +28,7 @@ const Filtros = ({ onFilterChange, onPriceChange }) => {
                 onChange={handleCategoriaChange}
             >
                 <option value="">Selecciona una categoría</option>
+                <option value="Arte">Arte</option>
                 <option value="Computacion y Tecnologia">Computacion y Tecnologia</option>
                 <option value="Ficcion romantica">Ficcion romantica</option>
                 <option value="Economia y Finanzas">Economia y Finanzas</option>
