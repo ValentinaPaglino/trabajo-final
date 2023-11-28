@@ -16,7 +16,7 @@ function App() {
   const [libros, setLibros] = useState([]);
   const [librosFiltrados, setLibrosFiltrados] = useState([]);
   const [precioMax, setPrecioMax] = useState(0); 
-  const [filtroActual, setFiltroActual] = useState({ categoria: '', precio: 100000 });
+  const [filtroActual, setFiltroActual] = useState({ categoria: '', precio: 100000, ordenamiento: 'precio_desc' });
 
   // Obtener los libros al cargar el componente
   useEffect(() => {
@@ -26,19 +26,20 @@ function App() {
         setLibros(data);
         setLibrosFiltrados(data);
         const maxPrecioEncontrado = data.reduce((max, libro) => Math.max(max, libro.precio_$), 0);
-        setPrecioMax(maxPrecioEncontrado); 
+        const precioMaxConIncremento = maxPrecioEncontrado * 1.10; // Incrementa en un 10%
+        const precioMaxRedondeado = Math.ceil(precioMaxConIncremento / 1000) * 1000; // Redondea hacia arriba al múltiplo de 1000 más cercano
+        setPrecioMax(precioMaxRedondeado); 
       });
   }, []);
 
+  // Modificar aplicarFiltro para incluir el ordenamiento
   const aplicarFiltro = () => {
     let queryParams = '';
     if (filtroActual.categoria) {
-        queryParams += `categoria=${filtroActual.categoria}`;
+        queryParams += `categoria=${filtroActual.categoria}&`;
     }
-    if (queryParams.length > 0) {
-        queryParams += '&';
-    }
-    queryParams += `precio=${filtroActual.precio}`;
+    queryParams += `precio=${filtroActual.precio}&`;
+    queryParams += `ordenamiento=${filtroActual.ordenamiento}`; // Agregar ordenamiento al query
 
     fetch(`http://localhost:3000/?${queryParams}`)
       .then(response => response.json())
@@ -51,9 +52,15 @@ function App() {
     aplicarFiltro();
   };
 
-  // Manejar el cambio de filtro
+  // Manejar el cambio de filtro y ordenamiento
   const handleFilterChange = (categoria) => {
     setFiltroActual(prevState => ({ ...prevState, categoria: categoria }));
+    aplicarFiltro();
+  };
+
+  // Agregar una función para manejar el cambio en el ordenamiento
+  const onSortChange = (ordenamiento) => {
+    setFiltroActual(prevState => ({ ...prevState, ordenamiento: ordenamiento }));
     aplicarFiltro();
   };
 
@@ -65,7 +72,12 @@ function App() {
     <div>
       <Navbar/> 
       <SearchBar />
-      <Filtros onFilterChange={handleFilterChange} onPriceChange={onPriceChange} precioMax={precioMax} />
+      <Filtros 
+        onFilterChange={handleFilterChange} 
+        onPriceChange={onPriceChange}
+        onSortChange={onSortChange} // Pasar onSortChange a Filtros
+        precioMax={precioMax} 
+      />
 
       <Routes>
         <Route path={"/"} element={
