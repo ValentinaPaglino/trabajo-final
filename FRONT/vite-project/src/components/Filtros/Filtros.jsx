@@ -1,21 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import styles from './Filtros.module.css';
 
-const Filtros = ({ onFilterChange, onPriceChange }) => {
+const Filtros = ({ onFilterChange, onPriceChange, precioMax }) => {
     const [categoria, setCategoria] = useState('');
-    const [precio, setPrecio] = useState(100);
+    const [precio, setPrecio] = useState(0);
+
+    useEffect(() => {
+        if (typeof precioMax === 'number' && !isNaN(precioMax)) {
+            setPrecio(precioMax);
+        }
+    }, [precioMax]);
 
     const handleCategoriaChange = (e) => {
-        setCategoria(e.target.value);
+        const nuevaCategoria = e.target.value;
+        setCategoria(nuevaCategoria);
         if (onFilterChange) {
-            onFilterChange(e.target.value);
+            onFilterChange(nuevaCategoria, precio); // Pasa la nueva categoría y el precio actual
         }
     };
 
     const handlePrecioChange = (e) => {
-        setPrecio(e.target.value);
+        const nuevoPrecio = e.target.value;
+        setPrecio(nuevoPrecio);
         if (onPriceChange) {
-            onPriceChange(e.target.value);
+            onPriceChange(nuevoPrecio, categoria); // Pasa la categoría actual y el nuevo precio
         }
     };
 
@@ -43,7 +51,7 @@ const Filtros = ({ onFilterChange, onPriceChange }) => {
                 name="precio_$"
                 className={styles.slider}
                 min="0"
-                max="1000"
+                max={precioMax}
                 value={precio}
                 onChange={handlePrecioChange}
             />
@@ -53,5 +61,4 @@ const Filtros = ({ onFilterChange, onPriceChange }) => {
 };
 
 export default Filtros;
-
 
