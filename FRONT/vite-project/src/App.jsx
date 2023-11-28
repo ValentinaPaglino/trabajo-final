@@ -15,7 +15,7 @@ function App() {
 
   const [libros, setLibros] = useState([]);
   const [librosFiltrados, setLibrosFiltrados] = useState([]);
-  const [precioMax, setPrecioMax] = useState(0); // Añade estado para precioMax
+  const [precioMax, setPrecioMax] = useState(0); 
   const [filtroActual, setFiltroActual] = useState({ categoria: '', precio: 100000 });
 
   // Obtener los libros al cargar el componente
@@ -26,7 +26,7 @@ function App() {
         setLibros(data);
         setLibrosFiltrados(data);
         const maxPrecioEncontrado = data.reduce((max, libro) => Math.max(max, libro.precio_$), 0);
-        setPrecioMax(maxPrecioEncontrado); // Actualiza precioMax
+        setPrecioMax(maxPrecioEncontrado); 
       });
   }, []);
 
@@ -38,7 +38,7 @@ function App() {
     if (queryParams.length > 0) {
         queryParams += '&';
     }
-    queryParams += `precio=${filtroActual.precio}`; // Asegúrate de usar precio_$
+    queryParams += `precio=${filtroActual.precio}`;
 
     fetch(`http://localhost:3000/?${queryParams}`)
       .then(response => response.json())
