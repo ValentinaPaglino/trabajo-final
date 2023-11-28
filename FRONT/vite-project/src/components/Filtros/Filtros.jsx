@@ -15,7 +15,7 @@ const Filtros = ({ onFilterChange, onPriceChange, precioMax }) => {
         const nuevaCategoria = e.target.value;
         setCategoria(nuevaCategoria);
         if (onFilterChange) {
-            onFilterChange(nuevaCategoria, precio); // Pasa la nueva categoría y el precio actual
+            onFilterChange(nuevaCategoria, precio);
         }
     };
 
@@ -23,7 +23,7 @@ const Filtros = ({ onFilterChange, onPriceChange, precioMax }) => {
         const nuevoPrecio = e.target.value;
         setPrecio(nuevoPrecio);
         if (onPriceChange) {
-            onPriceChange(nuevoPrecio, categoria); // Pasa la categoría actual y el nuevo precio
+            onPriceChange(nuevoPrecio, categoria);
         }
     };
 
