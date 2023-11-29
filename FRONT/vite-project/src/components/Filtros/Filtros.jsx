@@ -1,21 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import styles from './Filtros.module.css';
+import { FormControl, InputLabel, Select, MenuItem, Typography, Slider } from '@material-ui/core';
 
-const Filtros = ({ onFilterChange, onPriceChange }) => {
+const Filtros = ({ onFilterChange, onPriceChange, onSortChange, precioMax }) => {
     const [categoria, setCategoria] = useState('');
-    const [precio, setPrecio] = useState(100);
+    const [precio, setPrecio] = useState(precioMax || 100);
+
+    useEffect(() => {
+        if (typeof precioMax === 'number' && !isNaN(precioMax)) {
+            setPrecio(precioMax);
+        }
+    }, [precioMax]);
 
     const handleCategoriaChange = (e) => {
-        setCategoria(e.target.value);
+        const nuevaCategoria = e.target.value;
+        setCategoria(nuevaCategoria);
         if (onFilterChange) {
-            onFilterChange(e.target.value);
+            onFilterChange(nuevaCategoria, precio);
         }
     };
 
     const handlePrecioChange = (e) => {
-        setPrecio(e.target.value);
+        const nuevoPrecio = e.target.value;
+        setPrecio(nuevoPrecio);
         if (onPriceChange) {
-            onPriceChange(e.target.value);
+            onPriceChange(nuevoPrecio, categoria);
+        }
+    };
+
+    const handleSortChange = (e) => {
+        if (onSortChange) {
+            onSortChange(e.target.value);
         }
     };
 
@@ -38,20 +53,31 @@ const Filtros = ({ onFilterChange, onPriceChange }) => {
             </select>
             
             {/* Control deslizador para el precio */}
+            <label htmlFor="precio_$" className={styles.sliderLabel}>
+                Ajustar precio
+            </label>
             <input
                 type="range"
                 name="precio_$"
                 className={styles.slider}
                 min="0"
-                max="1000"
+                max={precioMax}
                 value={precio}
                 onChange={handlePrecioChange}
             />
             <span className={styles.precioLabel}>${precio}</span>
+            {/* Control para el ordenamiento */}
+            <select
+                name="ordenamiento"
+                className={styles.inputOrdenamiento}
+                onChange={handleSortChange}
+            >
+                <option value="precio_asc">Precio: Menor a Mayor</option>
+                <option value="precio_desc">Precio: Mayor a Menor</option>
+            </select>
         </div>
     );
 };
 
 export default Filtros;
-
 
