@@ -1,48 +1,30 @@
 const { Producto, Categoria } = require("../DB_connection");
-const { Op } = require("sequelize");
 
 const findAllProductos = async (req, res) => {
     try {
-        const categoriaNombre = req.query.categoria;
-        const precioMax = req.query.precio;
-        const ordenamiento = req.query.ordenamiento; // Agregar el parámetro de ordenamiento
-
-        let condiciones = {
+        const opciones = {
             include: [{
                 model: Categoria,
                 attributes: ["nombre"],
-                through: { attributes: [] }
-            }]
+                through: {
+                    attributes: [],
+                },
+            }],
         };
 
-        if (categoriaNombre) {
-            condiciones.include[0].where = { nombre: categoriaNombre };
+        // Filtrado por categoría si se proporciona el parámetro
+        const filtroCategoria = req.query.categoria;
+        if (filtroCategoria) {
+            opciones.include[0].where = { nombre: filtroCategoria };
         }
 
-        if (precioMax) {
-            condiciones.where = { 
-                precio_$: { [Op.lte]: precioMax }
-            };
-        }
+        // Aquí puedes añadir más lógica de filtrado si lo necesitas
 
-        // Agregar lógica de ordenamiento
-        if (ordenamiento) {
-            switch (ordenamiento) {
-                case 'precio_asc':
-                    condiciones.order = [['precio_$', 'ASC']];
-                    break;
-                case 'precio_desc':
-                    condiciones.order = [['precio_$', 'DESC']];
-                    break;
-                // Puedes agregar más casos si hay otros criterios de ordenamiento
-            }
-        }
-
-        const productos = await Producto.findAll(condiciones);
-
+        const productos = await Producto.findAll(opciones);
         return res.status(200).json(productos);
     } catch (error) {
-        res.status(500).json(error.message);
+        console.error(error.message);
+        return res.status(500).json({ error: error.message });
     }
 };
 

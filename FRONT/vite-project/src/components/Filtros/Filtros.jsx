@@ -1,8 +1,8 @@
 import React, { useState, useEffect} from 'react';
 import styles from './Filtros.module.css';
-import { FormControl, InputLabel, Select, MenuItem, Typography, Slider } from '@material-ui/core';
 
 const Filtros = ({ onFilterChange, onPriceChange, onSortChange, precioMax }) => {
+    const [categorias, setCategorias] = useState([]);
     const [categoria, setCategoria] = useState('');
     const [precio, setPrecio] = useState(precioMax || 100);
 
@@ -11,6 +11,14 @@ const Filtros = ({ onFilterChange, onPriceChange, onSortChange, precioMax }) => 
             setPrecio(precioMax);
         }
     }, [precioMax]);
+
+    // Función para cargar las categorías desde el backend
+    useEffect(() => {
+        fetch('http://localhost:3000/categorias')
+            .then(response => response.json())
+            .then(data => setCategorias(data))
+            .catch(error => console.error('Error al cargar categorías:', error));
+    }, []);
 
     const handleCategoriaChange = (e) => {
         const nuevaCategoria = e.target.value;
@@ -43,13 +51,9 @@ const Filtros = ({ onFilterChange, onPriceChange, onSortChange, precioMax }) => 
                 onChange={handleCategoriaChange}
             >
                 <option value="">Selecciona una categoría</option>
-                <option value="Arte">Arte</option>
-                <option value="Computacion y Tecnologia">Computacion y Tecnologia</option>
-                <option value="Ficcion romantica">Ficcion romantica</option>
-                <option value="Economia y Finanzas">Economia y Finanzas</option>
-                <option value="Infantil y Juvenil">Infantil y Juvenil</option>
-                <option value="Historia de America">Historia de America</option>
-                <option value="Divulgacion cientifica">Divulgacion cientifica</option>
+                {categorias.map((cat) => (
+                    <option key={cat.id} value={cat.nombre}>{cat.nombre}</option>
+                ))}
             </select>
             
             {/* Control deslizador para el precio */}
@@ -80,4 +84,3 @@ const Filtros = ({ onFilterChange, onPriceChange, onSortChange, precioMax }) => 
 };
 
 export default Filtros;
-
