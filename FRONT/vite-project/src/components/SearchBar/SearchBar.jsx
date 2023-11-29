@@ -3,8 +3,9 @@ import React from 'react'
 const SearchBar = () => {
   return (
     <div>
-    SearchBar
-
+   <br></br>
+   <br></br>
+   <br></br>
     </div>
   )
 }
