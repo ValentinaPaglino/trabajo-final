@@ -60,7 +60,6 @@ function DetalleDeProducto(props) {
 
 
   return (
-    <div>
    <Card sx={{  maxWidth: 700 }}>
 
       
@@ -152,7 +151,6 @@ function DetalleDeProducto(props) {
       </Collapse>
     </Card>
 
-    </div>
   )
 }
 
