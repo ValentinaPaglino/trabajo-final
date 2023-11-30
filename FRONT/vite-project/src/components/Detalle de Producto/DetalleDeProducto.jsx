@@ -60,7 +60,6 @@ function DetalleDeProducto(props) {
 
 
   return (
-    <div>
    <Card sx={{  maxWidth: 700 }}>
 
       
@@ -91,7 +90,7 @@ function DetalleDeProducto(props) {
            >
              {accounting.formatMoney(precio_$, { precision: 0 })}
             </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary"> 
        
         </Typography>
       </CardContent>
@@ -152,7 +151,6 @@ function DetalleDeProducto(props) {
       </Collapse>
     </Card>
 
-    </div>
   )
 }
 
