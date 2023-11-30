@@ -86,6 +86,7 @@ function App() {
             <MensajeSinLibros />
         } />
         <Route path={'/detail/:id'} element={<Detail/>}/>
+      
       </Routes>
     </div>
   )

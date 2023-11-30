@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 
 
 function ListadoDeProductos(props) {
-    const {libros}=props
+    const { libros }=props
    
     
    
@@ -15,8 +15,9 @@ function ListadoDeProductos(props) {
          <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
         {libros.map((libro) => {
-          const [categoria] = libro.Categoria;
-          const {nombre} =categoria; 
+          const {categoria} = libro;
+          const nombre = categoria ? categoria.nombre : 'Arte';
+
 
           return (
           <Grid key={libro.id} item xs={12} sm={6} md={4} lg={3}>

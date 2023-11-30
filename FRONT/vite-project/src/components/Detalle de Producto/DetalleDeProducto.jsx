@@ -12,7 +12,9 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AddShoppingCart } from '@mui/icons-material';
 import accounting from 'accounting';
-import { Button } from '@mui/material';
+import { Button, Modal } from '@mui/material';
+import Box from '@mui/material/Box';
+import Detail from './../../Views/Detail.jsx';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -25,19 +27,42 @@ const ExpandMore = styled((props) => {
   }),
 })); 
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 600,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 5,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
+
 function DetalleDeProducto(props) {
   
-  
-    const {id, titulo, autor, precio_$, editorial, categoria, año_publicacion, url_imagen, sinopsis} = props;
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const { id, titulo, autor, precio_$, url_imagen, nro_paginas, peso, fecha_publicacion, ISBN, editorial, idioma, descripcion } = props;
+    
     const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
+
   return (
     <div>
-    <Card sx={{ maxWidth: 300 }}>
+   <Card sx={{  maxWidth: 700 }}>
+
       
       <CardMedia
         component="img"
@@ -46,21 +71,26 @@ function DetalleDeProducto(props) {
         image={url_imagen}
         alt="Portada"
       />
-      <CardHeader
-     
-        action={
-          <Typography
-           
+      <CardHeader 
+        title={
+          <Typography variant='h5'>
+            {titulo}
+          </Typography>
+        }
+      
+      subheader={
+        <Typography variant='body2' color='textSecondary' noWrap>
+          {autor}
+        </Typography>
+      }        
+      />
+      <CardContent sx={{ flexGrow: 1, padding: 2 }}>
+      <Typography            
            variant='h5'
            color='textSecondary'
            >
-            {accounting.formatMoney (precio_$)}
+             {accounting.formatMoney(precio_$, { precision: 0 })}
             </Typography>
-        }
-       title={titulo}
-        subheader={autor}
-      />
-      <CardContent>
         <Typography variant="body2" color="text.secondary">
        
         </Typography>
@@ -79,17 +109,43 @@ function DetalleDeProducto(props) {
         >
           <ExpandMoreIcon />
         </ExpandMore>
-        <Button>
-          <Link to={`/detail/${id}`}> Ver detalle </Link>
-        </Button>
+        <React.Fragment>
+      <Button onClick={handleOpen}>Ver detalle</Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="child-modal-title"
+        aria-describedby="child-modal-description"
+      >
+        <Box sx={{ ...style, width: 500 }}>
+        <Detail
+                id={id}
+                titulo={titulo}
+                autor={autor}
+                precio_$={precio_$}
+                url_imagen={url_imagen}
+                nro_paginas={nro_paginas}
+                peso={peso}
+                fecha_publicacion={fecha_publicacion}
+                ISBN={ISBN}
+                editorial={editorial}
+                idioma={idioma}
+                descripcion={descripcion}
+              />
+        
+          <Button onClick={handleClose}>CERRAR</Button>
+        </Box>
+      </Modal>
+    </React.Fragment>
       </CardActions>
+      
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>Argumento:</Typography>
           <Typography paragraph>
           </Typography>
           <Typography paragraph>
-             {sinopsis}
+             {descripcion}
           </Typography>
          
         </CardContent>
