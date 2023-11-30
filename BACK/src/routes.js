@@ -9,7 +9,7 @@ const getCategorias = require('./controllers/categoriaController');
 const searchController = require('./controllers/searchController');
 
 const router = Router();
-router.use(express.json());
+router.use(express.json()); 
 
 // Ruta para obtener todos los productos (incluyendo filtros y paginación)
 router.get("/", findAllProductos);
