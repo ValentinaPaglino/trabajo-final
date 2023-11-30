@@ -31,6 +31,11 @@ function ListadoDeProductos(props) {
             editorial={libro.editorial}
             categoria={nombre}
             sinopsis={libro.descripcion}
+            nro_paginas={libro.nro_paginas}
+            idioma={libro.idioma}
+            ISBN={libro.ISBN}
+            peso={libro.peso}
+            fecha_publicacion={libro.fecha_publicacion}
             />
           </Grid>
         )})}

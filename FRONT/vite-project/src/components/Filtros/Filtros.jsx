@@ -57,7 +57,7 @@ const Filtros = ({ onFilterChange, onPriceChange, onSortChange, precioMax }) => 
             </select>
             
             {/* Control deslizador para el precio */}
-            <label htmlFor="precio_$" className={styles.sliderLabel}>
+            <label  className={styles.sliderLabel}>
                 Ajustar precio
             </label>
             <input
