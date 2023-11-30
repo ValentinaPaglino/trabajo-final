@@ -22,7 +22,7 @@ const findAllProductos = async (req, res) => {
         if (precioMax) {
             condiciones.where = { 
                 precio_$: { [Op.lte]: precioMax }
-            };
+            }; 
         }
 
         // Agregar lógica de ordenamiento
