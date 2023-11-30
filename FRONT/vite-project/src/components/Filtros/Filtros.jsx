@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import styles from './Filtros.module.css';
-import { FormControl, InputLabel, Select, MenuItem, Typography, Slider } from '@material-ui/core';
+// import { FormControl, InputLabel, Select, MenuItem, Typography, Slider } from '@material-ui/core';
 
 const Filtros = ({ onFilterChange, onPriceChange, onSortChange, precioMax }) => {
     const [categoria, setCategoria] = useState('');
@@ -53,7 +53,7 @@ const Filtros = ({ onFilterChange, onPriceChange, onSortChange, precioMax }) => 
             </select>
             
             {/* Control deslizador para el precio */}
-            <label htmlFor="precio_$" className={styles.sliderLabel}>
+            <label  className={styles.sliderLabel}>
                 Ajustar precio
             </label>
             <input

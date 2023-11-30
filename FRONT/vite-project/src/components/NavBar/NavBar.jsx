@@ -10,6 +10,8 @@ import { makeStyles, styled } from '@mui/material/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { ClassNames } from '@emotion/react';
 
+import { useAuth0 } from '@auth0/auth0-react';
+
 const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
         right: -3,
@@ -23,6 +25,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 export default function Navbar() {
   
+  const { loginWithRedirect } = useAuth0()
   
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -40,7 +43,7 @@ export default function Navbar() {
           <Typography variant="h7" component="div" sx={{ flexGrow: 1, textAlign: 'right' }}>
             Hola Invitado  
           </Typography>
-          <Button color="inherit">Sign In</Button>
+          <Button color="inherit" onClick={loginWithRedirect}>Sign In</Button>
   
           <IconButton aria-label="cart">
            <StyledBadge badgeContent={5} color= "secondary" >

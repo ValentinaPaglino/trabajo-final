@@ -7,7 +7,7 @@ import Collapse from '@mui/material/Collapse';
 const Detail = (props) => {
   const { titulo, autor, precio_$, url_imagen, nro_paginas, peso, fecha_publicacion, ISBN, editorial, idioma, descripcion } = props;
   const [expanded, setExpanded] = useState(false);
-console.log(titulo,peso);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
