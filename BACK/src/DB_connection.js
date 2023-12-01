@@ -22,7 +22,7 @@ Categoria.belongsToMany(Producto,{through:"ProductoCategoria"});
 
 
 
-module.exports ={ 
+module.exports ={
    Producto,
    Categoria,
    User,
