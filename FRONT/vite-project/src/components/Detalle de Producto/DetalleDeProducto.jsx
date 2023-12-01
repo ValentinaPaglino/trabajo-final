@@ -140,10 +140,10 @@ function DetalleDeProducto(props) {
       
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>Argumento:</Typography>
-          <Typography paragraph>
+          <Typography>Argumento:</Typography>
+          <Typography>
           </Typography>
-          <Typography paragraph>
+          <Typography>
              {descripcion}
           </Typography>
          
