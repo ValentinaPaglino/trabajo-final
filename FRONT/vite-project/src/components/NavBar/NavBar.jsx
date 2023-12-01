@@ -16,6 +16,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TextField from '@mui/material/TextField';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -39,7 +42,7 @@ const modalStyle = {
 };
 
 export default function Navbar() {
-  const { carrito, actualizarCantidad, removerDelCarrito } = useContext(CarritoContext);
+  const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);
   const [modalAbierto, setModalAbierto] = useState(false);
 
   const manejarAbrirModal = () => setModalAbierto(true);
@@ -49,7 +52,6 @@ export default function Navbar() {
     actualizarCantidad(productoId, nuevaCantidad);
   };
 
-  // Calcular el precio total general
   const precioTotalGeneral = carrito.reduce((total, producto) => {
     return total + (producto.precio_$ * (producto.cantidad || 1));
   }, 0);
@@ -80,40 +82,59 @@ export default function Navbar() {
       </AppBar>
 
       <Modal open={modalAbierto} onClose={manejarCerrarModal}>
-      <Box sx={modalStyle}>
-        <Typography id="carrito-modal-titulo" variant="h6" component="h2">
-          Carrito de Compras
-        </Typography>
-        <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-          {carrito.map((producto, index) => (
-            <ListItem key={index}>
-            <ListItemText
-              primary={producto.titulo}
-              //secondary={`Autor: ${producto.autor} - Precio Unitario: ${producto.precio_$}`}
-            />
-            <TextField
-              label="Cantidad"
-              type="number"
-              variant="outlined"
-              size="small"
-              value={producto.cantidad || 1}
-              onChange={(e) => handleChangeCantidad(producto.id, parseInt(e.target.value, 10))}
-              sx={{ width: '90px', marginRight: '10px' }}
-            />
-            <IconButton edge="end" aria-label="delete" onClick={() => removerDelCarrito(producto.id)}>
-              <DeleteIcon />
-            </IconButton>
-          </ListItem>
-          ))}
-        </List>
-        <Typography variant="h6" sx={{ mt: 2 }}>
-          Total: {precioTotalGeneral}
-        </Typography>
-        <Button variant="contained" color="primary" onClick={manejarCerrarModal}>
-          Ir a pagar
-        </Button>
-      </Box>
-    </Modal>
+        <Box sx={modalStyle}>
+        <IconButton
+          aria-label="close"
+          onClick={manejarCerrarModal}
+          sx={{ position: 'absolute', right: 8, top: 8 }}
+        >
+          <CloseIcon />
+        </IconButton>
+          <Typography id="carrito-modal-titulo" variant="h6" component="h2">
+            Carrito de Compras
+          </Typography>
+          {carrito.length === 0 && (
+            <Alert severity="info" sx={{ mt: 2 }}>
+              Tu carrito está vacío.
+            </Alert>
+          )}
+          <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            {carrito.map((producto, index) => (
+              <ListItem key={index}>
+                <ListItemText
+                  primary={producto.titulo}
+                  secondary={`Precio Unitario: ${producto.precio_$}`}
+                />
+                <TextField
+                  label="Cantidad"
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  value={producto.cantidad || 1}
+                  onChange={(e) => handleChangeCantidad(producto.id, parseInt(e.target.value, 10))}
+                  sx={{ width: '90px', marginRight: '10px' }}
+                />
+                <IconButton edge="end" aria-label="delete" onClick={() => removerDelCarrito(producto.id)}>
+                  <DeleteIcon />
+                </IconButton>
+              </ListItem>
+            ))}
+          </List>
+          {carrito.length > 0 && (
+            <>
+              <Typography variant="h6" sx={{ mt: 2 }}>
+                Total: {precioTotalGeneral}
+              </Typography>
+              <Button variant="contained" color="primary" onClick={manejarCerrarModal}>
+                Ir a pagar
+              </Button>
+              <Button variant="elevation={2}" color="secondary" onClick={vaciarCarrito} sx={{ marginLeft: '10px' }}>
+                Vaciar Carrito
+              </Button>
+            </>
+          )}
+        </Box>
+      </Modal>
     </Box>
   );
 }

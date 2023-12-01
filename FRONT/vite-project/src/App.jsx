@@ -1,24 +1,19 @@
 import './App.css';
-
 import ListadoDeProductos from './components/Listado de Productos/ListadoDeProductos';
 import SearchBar from './components/SearchBar/SearchBar';
 import { Route, Routes } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Detail from './Views/Detail';
 import Navbar from './components/NavBar/NavBar';
-import PATHROUTES from './helpers/PathRoutes.helper';
 import MensajeSinLibros from './components/Mensaje sin libros/MensajeSinLibros';
 import Filtros from './components/Filtros/Filtros';
 import { CarritoProvider } from './providers/carritoContext';
-
-
 
 function App() {
   const [librosFiltrados, setLibrosFiltrados] = useState([]);
   const [precioMax, setPrecioMax] = useState(0); 
   const [filtroActual, setFiltroActual] = useState({ categoria: '', precio: 100000, ordenamiento: 'precio_desc' });
 
-  // Obtener los libros al cargar el componente
   useEffect(() => {
     fetch('http://localhost:3000')
       .then((response) => response.json())
@@ -34,7 +29,7 @@ function App() {
   const aplicarFiltro = () => {
     let queryParams = '';
     if (filtroActual.categoria) {
-        queryParams += `categoria=${filtroActual.categoria}&`;
+      queryParams += `categoria=${filtroActual.categoria}&`;
     }
     queryParams += `precio=${filtroActual.precio}&`;
     queryParams += `ordenamiento=${filtroActual.ordenamiento}`;
@@ -75,19 +70,21 @@ function App() {
     <div>
       <CarritoProvider>
         <Navbar/> 
-        <SearchBar onSearchSubmit={onSearchSubmit} />
-        <Filtros 
-          onFilterChange={handleFilterChange} 
-          onPriceChange={onPriceChange}
-          onSortChange={onSortChange} 
-          precioMax={precioMax} 
-        />
-
         <Routes>
           <Route path={"/"} element={
-            librosFiltrados.length > 0 ? 
-              <ListadoDeProductos libros={librosFiltrados} /> :
-              <MensajeSinLibros />
+            <>
+              <SearchBar onSearchSubmit={onSearchSubmit} />
+              <Filtros 
+                onFilterChange={handleFilterChange} 
+                onPriceChange={onPriceChange}
+                onSortChange={onSortChange} 
+                precioMax={precioMax} 
+              />
+              {librosFiltrados.length > 0 ? 
+                <ListadoDeProductos libros={librosFiltrados} /> :
+                <MensajeSinLibros />
+              }
+            </>
           } />
           <Route path={'/detail/:id'} element={<Detail/>}/>
         </Routes>

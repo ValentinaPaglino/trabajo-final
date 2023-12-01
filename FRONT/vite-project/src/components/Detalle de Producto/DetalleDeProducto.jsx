@@ -80,7 +80,7 @@ function DetalleDeProducto(props) {
 
 
   return (
-   <Card sx={{  maxWidth: 700 }}>
+   <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
 
       
       <CardMedia
