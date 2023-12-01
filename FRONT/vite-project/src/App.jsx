@@ -9,6 +9,7 @@ import Navbar from './components/NavBar/NavBar';
 import PATHROUTES from './helpers/PathRoutes.helper';
 import MensajeSinLibros from './components/Mensaje sin libros/MensajeSinLibros';
 import Filtros from './components/Filtros/Filtros';
+import { CarritoProvider } from './providers/carritoContext';
 
 
 
@@ -72,23 +73,25 @@ function App() {
 
   return (
     <div>
-      <Navbar/> 
-      <SearchBar onSearchSubmit={onSearchSubmit} />
-      <Filtros 
-        onFilterChange={handleFilterChange} 
-        onPriceChange={onPriceChange}
-        onSortChange={onSortChange} 
-        precioMax={precioMax} 
-      />
+      <CarritoProvider>
+        <Navbar/> 
+        <SearchBar onSearchSubmit={onSearchSubmit} />
+        <Filtros 
+          onFilterChange={handleFilterChange} 
+          onPriceChange={onPriceChange}
+          onSortChange={onSortChange} 
+          precioMax={precioMax} 
+        />
 
-      <Routes>
-        <Route path={"/"} element={
-          librosFiltrados.length > 0 ? 
-            <ListadoDeProductos libros={librosFiltrados} /> :
-            <MensajeSinLibros />
-        } />
-        <Route path={'/detail/:id'} element={<Detail/>}/>
-      </Routes>
+        <Routes>
+          <Route path={"/"} element={
+            librosFiltrados.length > 0 ? 
+              <ListadoDeProductos libros={librosFiltrados} /> :
+              <MensajeSinLibros />
+          } />
+          <Route path={'/detail/:id'} element={<Detail/>}/>
+        </Routes>
+      </CarritoProvider>
     </div>
   );
 } 

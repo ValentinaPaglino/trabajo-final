@@ -8,8 +8,7 @@ import { spacing } from '@mui/system';
 function ListadoDeProductos(props) {
     const { libros } = props;
     const [currentPage, setCurrentPage] = useState(1);
-    const librosPorPagina = 4; // Ajusta este valor según lo necesites
-
+    const librosPorPagina = 4;
     const indexOfLastLibro = currentPage * librosPorPagina;
     const indexOfFirstLibro = indexOfLastLibro - librosPorPagina;
     const librosActuales = libros.slice(indexOfFirstLibro, indexOfLastLibro);
