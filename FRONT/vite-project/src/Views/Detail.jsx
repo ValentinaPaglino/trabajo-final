@@ -26,8 +26,7 @@ const Detail = (props) => {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <CardContent>
-              <Typography variant="body2" color="text.secondary">
+            <CardContent variant="body2" color="text.secondary">
                 <CardHeader
                   title={titulo}
                   subheader={autor}
@@ -35,7 +34,6 @@ const Detail = (props) => {
                 <Typography variant='h5' color='textSecondary'>
                 {accounting.formatMoney(precio_$, { precision: 0 })}
                 </Typography>
-              </Typography>
               <Typography variant="body2" color="text.secondary">
                 <br />
                 Cantidad de páginas: {nro_paginas}
@@ -67,10 +65,10 @@ const Detail = (props) => {
         </Grid>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>Argumento:</Typography>
-          <Typography paragraph>
+          <Typography >Argumento:</Typography>
+          <Typography >
           </Typography>
-          <Typography paragraph>
+          <Typography >
              {descripcion}
           </Typography>
          
