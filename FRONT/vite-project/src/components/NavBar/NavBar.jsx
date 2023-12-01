@@ -1,35 +1,62 @@
+import React, { useContext, useState } from 'react';
+import { CarritoContext } from '../../providers/carritoContext.jsx';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import logo from '../../assets/logo.png' 
-import Badge from '@mui/material/Badge';
-import { makeStyles, styled } from '@mui/material/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { ClassNames } from '@emotion/react';
-
-
+import Badge from '@mui/material/Badge';
+import { styled } from '@mui/material/styles';
+import logo from '../../assets/logo.png';
+import Modal from '@mui/material/Modal';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import DeleteIcon from '@mui/icons-material/Delete';
+import TextField from '@mui/material/TextField';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
-    '& .MuiBadge-badge': {
-        right: -3,
-        top: 13,
-        border: `2px solid ${theme.palette.background.paper}`,
-        padding: '0 4px',
-
-    },
+  '& .MuiBadge-badge': {
+    right: -3,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '0 4px',
+  },
 }));
 
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 export default function Navbar() {
-  
+  const { carrito, actualizarCantidad, removerDelCarrito } = useContext(CarritoContext);
+  const [modalAbierto, setModalAbierto] = useState(false);
 
-  
+  const manejarAbrirModal = () => setModalAbierto(true);
+  const manejarCerrarModal = () => setModalAbierto(false);
+
+  const handleChangeCantidad = (productoId, nuevaCantidad) => {
+    actualizarCantidad(productoId, nuevaCantidad);
+  };
+
+  // Calcular el precio total general
+  const precioTotalGeneral = carrito.reduce((total, producto) => {
+    return total + (producto.precio_$ * (producto.cantidad || 1));
+  }, 0);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" sx={{ backgroundColor: '#2196F3' /* Puedes cambiar este color */ }}>
+      <AppBar position="fixed" sx={{ backgroundColor: '#2196F3' }}>
         <Toolbar>
           <IconButton
             size="large"
@@ -38,21 +65,55 @@ export default function Navbar() {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <img src={logo}/> 
+            <img src={logo} alt="Logo" />
           </IconButton>
-          <Typography variant="h7" component="div" sx={{ flexGrow: 1, textAlign: 'right' }}>
-            Hola Invitado  
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Los mejores libros
           </Typography>
-          <Button color="inherit" >Sign In</Button>
-  
-          <IconButton aria-label="cart">
-           <StyledBadge badgeContent={5} color= "secondary" >
-             <ShoppingCartIcon />
-           </StyledBadge>
+          <Button color="inherit">Iniciar Sesión</Button>
+          <IconButton aria-label="cart" onClick={manejarAbrirModal}>
+            <StyledBadge badgeContent={carrito.length} color="secondary">
+              <ShoppingCartIcon />
+            </StyledBadge>
           </IconButton>
-          
         </Toolbar>
       </AppBar>
+
+      <Modal open={modalAbierto} onClose={manejarCerrarModal}>
+      <Box sx={modalStyle}>
+        <Typography id="carrito-modal-titulo" variant="h6" component="h2">
+          Carrito de Compras
+        </Typography>
+        <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+          {carrito.map((producto, index) => (
+            <ListItem key={index}>
+            <ListItemText
+              primary={producto.titulo}
+              //secondary={`Autor: ${producto.autor} - Precio Unitario: ${producto.precio_$}`}
+            />
+            <TextField
+              label="Cantidad"
+              type="number"
+              variant="outlined"
+              size="small"
+              value={producto.cantidad || 1}
+              onChange={(e) => handleChangeCantidad(producto.id, parseInt(e.target.value, 10))}
+              sx={{ width: '90px', marginRight: '10px' }}
+            />
+            <IconButton edge="end" aria-label="delete" onClick={() => removerDelCarrito(producto.id)}>
+              <DeleteIcon />
+            </IconButton>
+          </ListItem>
+          ))}
+        </List>
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Total: {precioTotalGeneral}
+        </Typography>
+        <Button variant="contained" color="primary" onClick={manejarCerrarModal}>
+          Ir a pagar
+        </Button>
+      </Box>
+    </Modal>
     </Box>
   );
 }
