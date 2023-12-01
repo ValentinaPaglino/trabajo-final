@@ -7,6 +7,9 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { ClassNames } from '@emotion/react';
+import { Link } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import logo from '../../assets/logo.png';
@@ -18,6 +21,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
+
+
+
 
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -42,7 +48,27 @@ const modalStyle = {
 };
 
 export default function Navbar() {
-  const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);
+  
+const { isAuthenticated, user, logout } = useAuth0()
+
+const signOut = () => {
+  if (isAuthenticated) {
+    logout()
+  }
+  else {
+  localStorage.setItem("loggedIn", false)
+  localStorage.setItem("userEmail", "")
+  window.location.reload()
+  }
+}
+  
+const getUserData = () => {
+ if (isAuthenticated) {
+  return user.name
+ }
+ else return localStorage.getItem("userEmail")
+}
+  const { carrito, actualizarCantidad, removerDelCarrito } = useContext(CarritoContext);
   const [modalAbierto, setModalAbierto] = useState(false);
 
   const manejarAbrirModal = () => setModalAbierto(true);
@@ -69,10 +95,26 @@ export default function Navbar() {
           >
             <img src={logo} alt="Logo" />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+         
+          
+         
+
+    
+  
+          {/* <IconButton aria-label="cart"/>
+           <StyledBadge badgeContent={5} color= "secondary" >
+             <ShoppingCartIcon />
+           </StyledBadge> */}
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center' }}>
             Los mejores libros
           </Typography>
-          <Button color="inherit">Iniciar Sesión</Button>
+          <Typography variant="h7" component="div" sx={{ textAlign: 'right' }}>
+          {localStorage.getItem("loggedIn") === "true" || isAuthenticated ? 'Hola ' + getUserData() : 'Hola invitado'}
+          </Typography> 
+          {localStorage.getItem("loggedIn") === "true" || isAuthenticated ?
+           <Button color='inherit' onClick={signOut}> Sign Out</Button> :
+           <Link to={'/login'}><Button color="inherit" >Sign In</Button></Link>
+        }
           <IconButton aria-label="cart" onClick={manejarAbrirModal}>
             <StyledBadge badgeContent={carrito.length} color="secondary">
               <ShoppingCartIcon />
