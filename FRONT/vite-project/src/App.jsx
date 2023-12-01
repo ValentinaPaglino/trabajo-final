@@ -8,12 +8,15 @@ import Detail from './Views/Detail';
 import Navbar from './components/NavBar/NavBar';
 import PATHROUTES from './helpers/PathRoutes.helper';
 import MensajeSinLibros from './components/Mensaje sin libros/MensajeSinLibros';
+import Login from './Views/Login';
+import RegistroExitoso from './Views/RegistroExitoso';
 import Filtros from './components/Filtros/Filtros';
 import { CarritoProvider } from './providers/carritoContext';
 
 
 
 function App() {
+
   const [librosFiltrados, setLibrosFiltrados] = useState([]);
   const [precioMax, setPrecioMax] = useState(0); 
   const [filtroActual, setFiltroActual] = useState({ categoria: '', precio: 100000, ordenamiento: 'precio_desc' });
@@ -90,6 +93,8 @@ function App() {
               <MensajeSinLibros />
           } />
           <Route path={'/detail/:id'} element={<Detail/>}/>
+          <Route path='/login' element={<Login/>}></Route>
+          <Route path={'registroexitoso'} element={<RegistroExitoso/>}></Route>
         </Routes>
       </CarritoProvider>
     </div>

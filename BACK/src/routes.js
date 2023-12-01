@@ -5,6 +5,8 @@ const createCategoria = require("./controllers/createCategoria");
 const createProducto = require("./controllers/createProducto");
 const findAllProductos = require("./controllers/findAllProductos");
 const getProductoById = require('./controllers/getProductoById');
+const postUser = require('./controllers/postUser');
+const checkLogin = require('./controllers/checkLogin');
 const getCategorias = require('./controllers/categoriaController');
 const searchController = require('./controllers/searchController');
 
@@ -16,6 +18,12 @@ router.get("/", findAllProductos);
 
 // Ruta para crear un nuevo producto
 router.post("/", createProducto);
+
+// Ruta para registrarse
+router.post("/signup", postUser);
+
+// Ruta para validar login
+router.post("/login", checkLogin)
 
 // Ruta para obtener todas las categorías
 router.get("/categoria", findAllCategorias);
