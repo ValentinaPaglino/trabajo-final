@@ -8,10 +8,17 @@ import Detail from './Views/Detail';
 import Navbar from './components/NavBar/NavBar';
 import PATHROUTES from './helpers/PathRoutes.helper';
 import MensajeSinLibros from './components/Mensaje sin libros/MensajeSinLibros';
+import { useLocation } from 'react-router-dom';
 
 import Filtros from './components/Filtros/Filtros';
+import Login from './Views/Login';
+import RegistroExitoso from './Views/RegistroExitoso';
 
 function App() {
+  // const location = useLocation()
+
+
+  
 
   const [libros, setLibros] = useState([]);
   const [librosFiltrados, setLibrosFiltrados] = useState([]);
@@ -70,14 +77,14 @@ function App() {
 
   return (
     <div>
-      <Navbar/> 
+      <Navbar /> 
       <SearchBar />
-      <Filtros 
+    <Filtros 
         onFilterChange={handleFilterChange} 
         onPriceChange={onPriceChange}
         onSortChange={onSortChange} // Pasar onSortChange a Filtros
         precioMax={precioMax} 
-      />
+      /> 
 
       <Routes>
         <Route path={"/"} element={
@@ -85,8 +92,9 @@ function App() {
             <ListadoDeProductos libros={librosFiltrados} /> :
             <MensajeSinLibros />
         } />
+        <Route path='/login' element={<Login/>}></Route>
         <Route path={'/detail/:id'} element={<Detail/>}/>
-      
+        <Route path={'registroexitoso'} element={<RegistroExitoso/>}></Route>
       </Routes>
     </div>
   )
