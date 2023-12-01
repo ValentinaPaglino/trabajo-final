@@ -68,7 +68,7 @@ const getUserData = () => {
  }
  else return localStorage.getItem("userEmail")
 }
-  const { carrito, actualizarCantidad, removerDelCarrito } = useContext(CarritoContext);
+  const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito  } = useContext(CarritoContext);
   const [modalAbierto, setModalAbierto] = useState(false);
 
   const manejarAbrirModal = () => setModalAbierto(true);
