@@ -7,8 +7,6 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { ClassNames } from '@emotion/react';
-import { Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
@@ -21,10 +19,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
-
-
-
-
+import PasarelaDePago from '../Pasarela de pago/PasarelaDePago.jsx'; // Asegúrate de que la ruta sea correcta
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -48,31 +43,36 @@ const modalStyle = {
 };
 
 export default function Navbar() {
-  
-const { isAuthenticated, user, logout } = useAuth0()
+  const { isAuthenticated, user, logout } = useAuth0();
+  const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);
+  const [modalCarritoAbierto, setModalCarritoAbierto] = useState(false);
+  const [modalPagoAbierto, setModalPagoAbierto] = useState(false);
 
-const signOut = () => {
-  if (isAuthenticated) {
-    logout()
-  }
-  else {
-  localStorage.setItem("loggedIn", false)
-  localStorage.setItem("userEmail", "")
-  window.location.reload()
-  }
-}
-  
-const getUserData = () => {
- if (isAuthenticated) {
-  return user.name
- }
- else return localStorage.getItem("userEmail")
-}
-  const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito  } = useContext(CarritoContext);
-  const [modalAbierto, setModalAbierto] = useState(false);
+  const manejarAbrirModalCarrito = () => setModalCarritoAbierto(true);
+  const manejarCerrarModalCarrito = () => setModalCarritoAbierto(false);
+  const manejarAbrirModalPago = () => {
+    setModalCarritoAbierto(false);
+    setModalPagoAbierto(true);
+  };
+  const manejarCerrarModalPago = () => setModalPagoAbierto(false);
 
-  const manejarAbrirModal = () => setModalAbierto(true);
-  const manejarCerrarModal = () => setModalAbierto(false);
+  const signOut = () => {
+    if (isAuthenticated) {
+      logout();
+    } else {
+      localStorage.setItem("loggedIn", false);
+      localStorage.setItem("userEmail", "");
+      window.location.reload();
+    }
+  };
+
+  const getUserData = () => {
+    if (isAuthenticated) {
+      return user.name;
+    } else {
+      return localStorage.getItem("userEmail");
+    }
+  };
 
   const handleChangeCantidad = (productoId, nuevaCantidad) => {
     actualizarCantidad(productoId, nuevaCantidad);
@@ -95,27 +95,17 @@ const getUserData = () => {
           >
             <img src={logo} alt="Logo" />
           </IconButton>
-         
-          
-         
-
-    
-  
-          {/* <IconButton aria-label="cart"/>
-           <StyledBadge badgeContent={5} color= "secondary" >
-             <ShoppingCartIcon />
-           </StyledBadge> */}
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center' }}>
             Los mejores libros
           </Typography>
           <Typography variant="h7" component="div" sx={{ textAlign: 'right' }}>
-          {localStorage.getItem("loggedIn") === "true" || isAuthenticated ? 'Hola ' + getUserData() : 'Hola invitado'}
+            {localStorage.getItem("loggedIn") === "true" || isAuthenticated ? 'Hola ' + getUserData() : 'Hola invitado'}
           </Typography> 
           {localStorage.getItem("loggedIn") === "true" || isAuthenticated ?
-           <Button color='inherit' onClick={signOut}> Sign Out</Button> :
-           <Link to={'/login'}><Button color="inherit" >Sign In</Button></Link>
-        }
-          <IconButton aria-label="cart" onClick={manejarAbrirModal}>
+            <Button color='inherit' onClick={signOut}> Sign Out</Button> :
+            <Link to={'/login'}><Button color="inherit" >Sign In</Button></Link>
+          }
+          <IconButton aria-label="cart" onClick={manejarAbrirModalCarrito}>
             <StyledBadge badgeContent={carrito.length} color="secondary">
               <ShoppingCartIcon />
             </StyledBadge>
@@ -123,15 +113,15 @@ const getUserData = () => {
         </Toolbar>
       </AppBar>
 
-      <Modal open={modalAbierto} onClose={manejarCerrarModal}>
+      <Modal open={modalCarritoAbierto} onClose={manejarCerrarModalCarrito}>
         <Box sx={modalStyle}>
-        <IconButton
-          aria-label="close"
-          onClick={manejarCerrarModal}
-          sx={{ position: 'absolute', right: 8, top: 8 }}
-        >
-          <CloseIcon />
-        </IconButton>
+          <IconButton
+            aria-label="close"
+            onClick={manejarCerrarModalCarrito}
+            sx={{ position: 'absolute', right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
           <Typography id="carrito-modal-titulo" variant="h6" component="h2">
             Carrito de Compras
           </Typography>
@@ -167,7 +157,7 @@ const getUserData = () => {
               <Typography variant="h6" sx={{ mt: 2 }}>
                 Total: {precioTotalGeneral}
               </Typography>
-              <Button variant="contained" color="primary" onClick={manejarCerrarModal}>
+              <Button variant="contained" color="primary" onClick={manejarAbrirModalPago}>
                 Ir a pagar
               </Button>
               <Button variant="elevation={2}" color="secondary" onClick={vaciarCarrito} sx={{ marginLeft: '10px' }}>
@@ -175,6 +165,12 @@ const getUserData = () => {
               </Button>
             </>
           )}
+        </Box>
+      </Modal>
+      
+      <Modal open={modalPagoAbierto} onClose={manejarCerrarModalPago}>
+        <Box sx={modalStyle}>
+          <PasarelaDePago total={precioTotalGeneral} cerrarModal={manejarCerrarModalPago} />
         </Box>
       </Modal>
     </Box>
