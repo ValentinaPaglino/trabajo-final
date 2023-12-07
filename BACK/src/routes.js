@@ -10,6 +10,7 @@ const checkLogin = require('./controllers/checkLogin');
 const getCategorias = require('./controllers/categoriaController');
 const searchController = require('./controllers/searchController');
 const emailController = require('./controllers/emailController');
+const mercadoPago = require("mercadopago"); // Importa MercadoPago
 
 const router = Router();
 router.use(express.json());
@@ -44,5 +45,9 @@ router.get('/search', searchController.searchProducts);
 // Ruta para manejar el envío del formulario de contacto
 router.post('/enviar-formulario', emailController.procesarYEnviarFormulario);
 
+// Rutas relacionadas con MercadoPago
+router.post("/create_preference", (req, res) => {
+    // Código relacionado con MercadoPago aquí
+});
 
 module.exports = router;
