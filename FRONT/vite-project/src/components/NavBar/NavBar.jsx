@@ -61,7 +61,8 @@ const signOut = () => {
   
 const getUserData = () => {
  if (isAuthenticated) {
-  return user.name
+  localStorage.setItem("username", user.name)
+  return localStorage.getItem("username")
  }
  else return localStorage.getItem("userEmail")
 }
@@ -84,6 +85,7 @@ const getUserData = () => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{ backgroundColor: '#2196F3' }}>
         <Toolbar>
+          <Link to={'/'}>
           <IconButton
             size="large"
             edge="start"
@@ -93,7 +95,7 @@ const getUserData = () => {
           >
             <img src={logo} alt="Logo" />
           </IconButton>
-         
+         </Link>
           
          
 
@@ -110,8 +112,8 @@ const getUserData = () => {
           {localStorage.getItem("loggedIn") === "true" || isAuthenticated ? 'Hola ' + getUserData() : 'Hola invitado'}
           </Typography> 
           {localStorage.getItem("loggedIn") === "true" || isAuthenticated ?
-           <Button color='inherit' onClick={signOut}> Sign Out</Button> :
-           <Link to={'/login'}><Button color="inherit" >Sign In</Button></Link>
+           <Button color='inherit' onClick={signOut}> Cerrar sesión </Button> :
+           <Link to={'/login'}><Button color="inherit" >Iniciar sesión</Button></Link>
         }
           <IconButton aria-label="cart" onClick={manejarAbrirModal}>
             <StyledBadge badgeContent={carrito.length} color="secondary">
