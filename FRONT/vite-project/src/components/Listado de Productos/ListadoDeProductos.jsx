@@ -8,7 +8,7 @@ import { spacing } from '@mui/system';
 function ListadoDeProductos(props) {
     const { libros } = props;
     const [currentPage, setCurrentPage] = useState(1);
-    const librosPorPagina = 4;
+    const librosPorPagina = 8;
     const indexOfLastLibro = currentPage * librosPorPagina;
     const indexOfFirstLibro = indexOfLastLibro - librosPorPagina;
     const librosActuales = libros.slice(indexOfFirstLibro, indexOfLastLibro);
@@ -19,12 +19,6 @@ function ListadoDeProductos(props) {
 
     return (
         <div>
-          <Paginacion
-                totalElementos={libros.length} 
-                elementosPorPagina={librosPorPagina} 
-                paginaActual={currentPage} 
-                cambiarPagina={handleChangePage} 
-            />
             <Box m={{ marginTop: 10 }}  sx={{ flexGrow: 1 }}>
                 <Grid container spacing={2}>
                     {librosActuales.map((libro) => {

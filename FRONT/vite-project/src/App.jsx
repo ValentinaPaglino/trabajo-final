@@ -1,18 +1,17 @@
+import React from 'react';
 import './App.css';
-
 import ListadoDeProductos from './components/Listado de Productos/ListadoDeProductos';
 import SearchBar from './components/SearchBar/SearchBar';
-import { Route, Routes } from 'react-router-dom';
+import { Router, Route, Routes } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Detail from './Views/Detail';
 import Navbar from './components/NavBar/NavBar';
-import PATHROUTES from './helpers/PathRoutes.helper';
 import MensajeSinLibros from './components/Mensaje sin libros/MensajeSinLibros';
 import Login from './Views/Login';
 import RegistroExitoso from './Views/RegistroExitoso';
 import Filtros from './components/Filtros/Filtros';
 import { CarritoProvider } from './providers/carritoContext';
-
+import Footer from './components/Footer/Footer';
 
 
 function App() {
@@ -21,7 +20,6 @@ function App() {
   const [precioMax, setPrecioMax] = useState(0); 
   const [filtroActual, setFiltroActual] = useState({ categoria: '', precio: 100000, ordenamiento: 'precio_desc' });
 
-  // Obtener los libros al cargar el componente
   useEffect(() => {
     fetch('http://localhost:3000')
       .then((response) => response.json())
@@ -37,7 +35,7 @@ function App() {
   const aplicarFiltro = () => {
     let queryParams = '';
     if (filtroActual.categoria) {
-        queryParams += `categoria=${filtroActual.categoria}&`;
+      queryParams += `categoria=${filtroActual.categoria}&`;
     }
     queryParams += `precio=${filtroActual.precio}&`;
     queryParams += `ordenamiento=${filtroActual.ordenamiento}`;
@@ -74,23 +72,36 @@ function App() {
     aplicarFiltro(); // Aplica el filtro cada vez que cambia filtroActual
   }, [filtroActual]);
 
+  const [isContactModalOpen, setContactModalOpen] = useState(false);
+
+    const handleOpenContactModal = () => {
+        setContactModalOpen(true);
+    };
+
+    const handleCloseContactModal = () => {
+        setContactModalOpen(false);
+    };
+
   return (
     <div>
       <CarritoProvider>
         <Navbar/> 
-        <SearchBar onSearchSubmit={onSearchSubmit} />
-        <Filtros 
-          onFilterChange={handleFilterChange} 
-          onPriceChange={onPriceChange}
-          onSortChange={onSortChange} 
-          precioMax={precioMax} 
-        />
-
         <Routes>
           <Route path={"/"} element={
-            librosFiltrados.length > 0 ? 
-              <ListadoDeProductos libros={librosFiltrados} /> :
-              <MensajeSinLibros />
+            <>
+              <SearchBar onSearchSubmit={onSearchSubmit} />
+              <Filtros 
+                onFilterChange={handleFilterChange} 
+                onPriceChange={onPriceChange}
+                onSortChange={onSortChange} 
+                precioMax={precioMax} 
+              />
+              {librosFiltrados.length > 0 ? 
+                <ListadoDeProductos libros={librosFiltrados} /> :
+                <MensajeSinLibros />
+              }
+              <Footer/>
+            </>
           } />
           <Route path={'/detail/:id'} element={<Detail/>}/>
           <Route path='/login' element={<Login/>}></Route>
