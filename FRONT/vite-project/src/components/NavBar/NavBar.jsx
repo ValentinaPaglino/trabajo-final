@@ -22,6 +22,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import PasarelaDePago from '../Pasarela de pago/PasarelaDePago.jsx';
 import { Link } from 'react-router-dom';
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
+import Login from '../../Views/Login.jsx';
+import { red } from '@mui/material/colors';
+import { Error } from '@mui/icons-material';
 
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -46,23 +49,9 @@ const modalStyle = {
 };
 
 export default function Navbar() {
+  // Variables de autenticación y pbtención de credenciales
   const { isAuthenticated, user, logout } = useAuth0();
-
-  const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);
-  const [modalCarritoAbierto, setModalCarritoAbierto] = useState(false);
-  const [modalPagoAbierto, setModalPagoAbierto] = useState(false);
-  const [mostrarBotonMercadoPago, setMostrarBotonMercadoPago] = useState(false);
-  const manejarAbrirModalCarrito = () => setModalCarritoAbierto(true);
-  const manejarCerrarModalCarrito = () => setModalCarritoAbierto(false);
-  const manejarAbrirModalPago = () => {
-    setModalCarritoAbierto(false);
-    setModalPagoAbierto(true);
-  };
-  const manejarCerrarModalPago = () => setModalPagoAbierto(false);
-  
-
-
-  const signOut = () => {
+ const signOut = () => {
     if (isAuthenticated) {
       logout();
     } else {
@@ -79,6 +68,31 @@ export default function Navbar() {
       return localStorage.getItem("userEmail");
     }
   };
+
+// ------------
+// Modal login para protección de pago
+
+const [modalLoginAbierto, setModalLoginAbierto] = useState(false)
+const handleModalLogin = () => setModalLoginAbierto(!modalLoginAbierto)
+
+
+// ---------------
+
+  const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);
+  const [modalCarritoAbierto, setModalCarritoAbierto] = useState(false);
+  const [modalPagoAbierto, setModalPagoAbierto] = useState(false);
+  const [mostrarBotonMercadoPago, setMostrarBotonMercadoPago] = useState(false);
+  const manejarAbrirModalCarrito = () => setModalCarritoAbierto(true);
+  const manejarCerrarModalCarrito = () => setModalCarritoAbierto(false);
+  const manejarAbrirModalPago = () => {
+    setModalCarritoAbierto(false);
+    setModalPagoAbierto(true);
+  };
+  const manejarCerrarModalPago = () => setModalPagoAbierto(false);
+  
+
+
+ 
 
   // Agrega el estado mostrarBotonPago al principio del componente
   const [mostrarBotonPago, setMostrarBotonPago] = useState(true);
@@ -239,7 +253,7 @@ export default function Navbar() {
               <Typography variant="h6" sx={{ mt: 2 }}>
                 Total: {precioTotalGeneral}
               </Typography>
-              <Button variant="contained" color="primary" onClick={handleBuy} style={{ display: mostrarBotonPago ? 'block' : 'none' }}>
+              <Button variant="contained" color="primary" onClick={localStorage.getItem("loggedIn") === "true" || isAuthenticated ? handleBuy : handleModalLogin} style={{ display: mostrarBotonPago ? 'block' : 'none' }}>
                 Generar botón de pago
               </Button>
               <Button style={{ display: mostrarBotonMercadoPago ? 'block' : 'none' }}>
@@ -248,6 +262,16 @@ export default function Navbar() {
             </>
           )}
         </Box>
+      </Modal>
+
+      <Modal open={modalLoginAbierto} onClose={handleModalLogin}>
+       <Box sx={modalStyle}>
+        <Typography sx={{ color: red[500] }}>
+            <Error sx={{ color: red[500] }}/>
+            Debe iniciar sesión para continuar.
+        </Typography>
+         <Login isModal={true} closeLoginModal={handleModalLogin} />
+       </Box>
       </Modal>
       
       <Modal open={modalPagoAbierto} onClose={manejarCerrarModalPago}>
