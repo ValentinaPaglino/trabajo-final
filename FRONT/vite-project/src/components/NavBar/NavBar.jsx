@@ -47,6 +47,7 @@ const modalStyle = {
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth0();
+
   const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);
   const [modalCarritoAbierto, setModalCarritoAbierto] = useState(false);
   const [modalPagoAbierto, setModalPagoAbierto] = useState(false);
@@ -59,6 +60,7 @@ export default function Navbar() {
   };
   const manejarCerrarModalPago = () => setModalPagoAbierto(false);
   
+
 
   const signOut = () => {
     if (isAuthenticated) {
@@ -90,6 +92,7 @@ export default function Navbar() {
     setMostrarBotonMercadoPago(false);
     // Muestra el botón "Generar botón de pago" nuevamente
     setMostrarBotonPago(true);
+
   };
 
   const precioTotalGeneral = carrito.reduce((total, producto) => {
@@ -159,6 +162,7 @@ export default function Navbar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{ backgroundColor: '#2196F3' }}>
         <Toolbar>
+     
           <Link to="/"> {/* Agrega el enlace al inicio */}
             <IconButton
               size="large"
@@ -177,10 +181,13 @@ export default function Navbar() {
             {localStorage.getItem("loggedIn") === "true" || isAuthenticated ? 'Hola ' + getUserData() : 'Hola invitado'}
           </Typography> 
           {localStorage.getItem("loggedIn") === "true" || isAuthenticated ?
-            <Button color='inherit' onClick={signOut}> Sign Out</Button> :
-            <Link to={'/login'}><Button color="inherit" >Sign In</Button></Link>
-          }
+
+           <Button color='inherit' onClick={signOut}> Cerrar sesión </Button> :
+           <Link to={'/login'}><Button color="inherit" >Iniciar sesión</Button></Link>
+        }
+         
           <IconButton aria-label="cart" onClick={manejarAbrirModalCarrito}>
+
             <StyledBadge badgeContent={carrito.length} color="secondary">
               <ShoppingCartIcon />
             </StyledBadge>
