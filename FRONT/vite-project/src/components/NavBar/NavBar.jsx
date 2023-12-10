@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { CarritoContext } from '../../providers/carritoContext.jsx';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -26,6 +26,7 @@ import Login from '../../Views/Login.jsx';
 import { red } from '@mui/material/colors';
 import { Error } from '@mui/icons-material';
 
+import Snackbar from '@mui/material/Snackbar';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -51,7 +52,9 @@ const modalStyle = {
 export default function Navbar() {
   // Variables de autenticación y pbtención de credenciales
   const { isAuthenticated, user, logout } = useAuth0();
- const signOut = () => {
+
+
+  const signOut = () => {
     if (isAuthenticated) {
       logout();
     } else {
@@ -90,6 +93,13 @@ const handleModalLogin = () => setModalLoginAbierto(!modalLoginAbierto)
   };
   const manejarCerrarModalPago = () => setModalPagoAbierto(false);
   
+ 
+  const [prevCartCount, setPrevCartCount] = useState(carrito.length);
+
+ 
+  const handleSnackbarClose = () => {
+  setSnackbarOpen(false); // Cierra el Snackbar
+  };
 
 
  
@@ -159,6 +169,21 @@ const handleModalLogin = () => setModalLoginAbierto(!modalLoginAbierto)
     }
   };
 
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  useEffect(() => {
+    if (carrito.length > prevCartCount) {
+        // El carrito ha crecido, muestra el Snackbar
+        setSnackbarOpen(true);
+    }
+    // Actualiza el conteo previo del carrito para la próxima comparación
+    setPrevCartCount(carrito.length);
+
+    // Resto de tu lógica...
+    console.log("El carrito ha cambiado. Nueva longitud del carrito:", carrito.length);
+    setMostrarBotonMercadoPago(false);
+    setMostrarBotonPago(true);
+}, [carrito]);
 
   const handleBuy = async () => {
     const id = await createPreference();
@@ -207,27 +232,48 @@ const handleModalLogin = () => setModalLoginAbierto(!modalLoginAbierto)
             </StyledBadge>
           </IconButton>
         </Toolbar>
+        <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message="Libro agregado al carrito"
+        action={
+          <React.Fragment>
+            <Button color="primary" size="small" onClick={manejarAbrirModalCarrito} sx={{ color: 'white' }}>
+              VER CARRITO
+            </Button>
+            <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </React.Fragment>
+        }
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Cambia la posición
+        ContentProps={{
+          sx: { backgroundColor: 'green' } // Cambia el estilo del contenido
+        }}
+      />
       </AppBar>
 
       <Modal open={modalCarritoAbierto} onClose={manejarCerrarModalCarrito}>
-        <Box sx={modalStyle}>
-          <IconButton
-            aria-label="close"
-            onClick={manejarCerrarModalCarrito}
-            sx={{ position: 'absolute', right: 8, top: 8 }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography id="carrito-modal-titulo" variant="h6" component="h2">
-            Carrito de Compras
-          </Typography>
-          {carrito.length === 0 && (
-            <Alert severity="info" sx={{ mt: 2 }}>
-              Tu carrito está vacío.
-            </Alert>
-          )}
-          <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-            {carrito.map((producto, index) => (
+  <Box sx={{ ...modalStyle, overflowY: 'auto', maxHeight: '800px'}}>
+    <IconButton
+      aria-label="close"
+      onClick={manejarCerrarModalCarrito}
+      sx={{ position: 'absolute', right: 8, top: 8 }}
+    >
+      <CloseIcon />
+    </IconButton>
+    <Typography id="carrito-modal-titulo" variant="h6" component="h2">
+      Carrito de Compras
+    </Typography>
+    {carrito.length === 0 && (
+      <Alert severity="info" sx={{ mt: 2 }}>
+        Tu carrito está vacío.
+      </Alert>
+    )}
+    {/* Ajuste aquí para la lista deslizable */}
+    <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: '400px', overflowY: 'auto' }}>
+      {carrito.map((producto, index) => (
               <ListItem key={index}>
                 <ListItemText
                   primary={producto.titulo}
@@ -251,12 +297,34 @@ const handleModalLogin = () => setModalLoginAbierto(!modalLoginAbierto)
           {carrito.length > 0 && (
             <>
               <Typography variant="h6" sx={{ mt: 2 }}>
-                Total: {precioTotalGeneral}
+                Total: {precioTotalGeneral} AR$
               </Typography>
-              <Button variant="contained" color="primary" onClick={localStorage.getItem("loggedIn") === "true" || isAuthenticated ? handleBuy : handleModalLogin} style={{ display: mostrarBotonPago ? 'block' : 'none' }}>
-                Generar botón de pago
+              <Button
+                onClick={localStorage.getItem("loggedIn") === "true" || isAuthenticated ? handleBuy : handleModalLogin}
+                style={{ 
+                  backgroundColor: '#009ee3', 
+                  color: '#ffffff',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '5px',
+                  height: '50px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '16px',
+                  width: '100%',
+                  minWidth: '280px',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  lineHeight: '18px',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  position: 'relative',
+                  display: mostrarBotonPago ? 'block' : 'none' // Ajusta la visualización según la condición
+                }}
+              >
+                Finalizar Compra
               </Button>
-              <Button style={{ display: mostrarBotonMercadoPago ? 'block' : 'none' }}>
+              <Button style={{ display: mostrarBotonMercadoPago ? 'block' : 'none', width: '100%', }}>
                 {preferenceId && <Wallet initialization={{ preferenceId }} />}
               </Button>
             </>
@@ -282,3 +350,4 @@ const handleModalLogin = () => setModalLoginAbierto(!modalLoginAbierto)
     </Box>
   );
 }
+
