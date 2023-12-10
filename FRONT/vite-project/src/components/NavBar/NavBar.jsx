@@ -22,6 +22,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import PasarelaDePago from '../Pasarela de pago/PasarelaDePago.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
+import Login from '../../Views/Login.jsx';
+import { red } from '@mui/material/colors';
+import { Error } from '@mui/icons-material';
+
 import Snackbar from '@mui/material/Snackbar';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -46,10 +50,9 @@ const modalStyle = {
 };
 
 export default function Navbar() {
+  // Variables de autenticación y pbtención de credenciales
   const { isAuthenticated, user, logout } = useAuth0();
   const history = useNavigate()
-
- 
 
 
   const signOut = () => {
@@ -75,7 +78,18 @@ export default function Navbar() {
 
 
 
- const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);
+
+
+// ------------
+// Modal login para protección de pago
+
+const [modalLoginAbierto, setModalLoginAbierto] = useState(false)
+const handleModalLogin = () => setModalLoginAbierto(!modalLoginAbierto)
+
+
+// ---------------
+
+  const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);  
   const [prevCartCount, setPrevCartCount] = useState(carrito.length);
   const [modalCarritoAbierto, setModalCarritoAbierto] = useState(false);
   const [modalPagoAbierto, setModalPagoAbierto] = useState(false);
@@ -87,9 +101,14 @@ export default function Navbar() {
     setModalPagoAbierto(true);
   };
   const manejarCerrarModalPago = () => setModalPagoAbierto(false);
+
+
   const handleSnackbarClose = () => {
   setSnackbarOpen(false); // Cierra el Snackbar
   };
+
+
+ 
 
   // Agrega el estado mostrarBotonPago al principio del componente
   const [mostrarBotonPago, setMostrarBotonPago] = useState(true);
@@ -289,7 +308,7 @@ export default function Navbar() {
                 Total: {precioTotalGeneral} AR$
               </Typography>
               <Button
-                onClick={handleBuy}
+                onClick={localStorage.getItem("loggedIn") === "true" || isAuthenticated ? handleBuy : handleModalLogin}
                 style={{ 
                   backgroundColor: '#009ee3', 
                   color: '#ffffff',
@@ -308,7 +327,7 @@ export default function Navbar() {
                   fontSize: '15px',
                   fontWeight: 600,
                   position: 'relative',
-                  // display: mostrarBotonPago ? 'block' : 'none' // Ajusta la visualización según la condición
+                  display: mostrarBotonPago ? 'block' : 'none' // Ajusta la visualización según la condición
                 }}
               >
                 Finalizar Compra
@@ -319,6 +338,16 @@ export default function Navbar() {
             </>
           )}
         </Box>
+      </Modal>
+
+      <Modal open={modalLoginAbierto} onClose={handleModalLogin}>
+       <Box sx={modalStyle}>
+        <Typography sx={{ color: red[500] }}>
+            <Error sx={{ color: red[500] }}/>
+            Debe iniciar sesión para continuar.
+        </Typography>
+         <Login isModal={true} closeLoginModal={handleModalLogin} />
+       </Box>
       </Modal>
       
       <Modal open={modalPagoAbierto} onClose={manejarCerrarModalPago}>

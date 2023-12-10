@@ -7,9 +7,9 @@ import { Google } from '@mui/icons-material'
 
 
 
-const Login = () => {
+const Login = (props) => {
 
-  
+  const {isModal, closeLoginModal} = props
 
   const { loginWithRedirect } = useAuth0()
   
@@ -75,10 +75,14 @@ const [errorMessage, setErrorMessage] = useState({
         history('/administrador')
         window.location.reload()
       }
+      else if (!isModal) {
+        history("/")
+      window.location.reload() }
       else {
-    history("/")
-      window.location.reload()
+        closeLoginModal()
+        
       }
+      
     };
     })
     .catch((error) => console.log(error))
