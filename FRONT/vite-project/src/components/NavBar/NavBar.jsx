@@ -20,7 +20,7 @@ import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import PasarelaDePago from '../Pasarela de pago/PasarelaDePago.jsx';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import Snackbar from '@mui/material/Snackbar';
 
@@ -47,8 +47,35 @@ const modalStyle = {
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth0();
+  const history = useNavigate()
 
-  const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);
+ 
+
+
+  const signOut = () => {
+    if (isAuthenticated) {
+      logout();
+
+    } else {
+      localStorage.setItem("loggedIn", false);
+      localStorage.setItem("userEmail", "");
+      localStorage.setItem("userRol", "")
+      history('/')
+      window.location.reload();
+    }
+  };
+
+  const getUserData = () => {
+    if (isAuthenticated) {
+      return user.name;
+    } else {
+      return localStorage.getItem("userEmail");
+    }
+  };
+
+
+
+ const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);
   const [prevCartCount, setPrevCartCount] = useState(carrito.length);
   const [modalCarritoAbierto, setModalCarritoAbierto] = useState(false);
   const [modalPagoAbierto, setModalPagoAbierto] = useState(false);
@@ -62,25 +89,6 @@ export default function Navbar() {
   const manejarCerrarModalPago = () => setModalPagoAbierto(false);
   const handleSnackbarClose = () => {
   setSnackbarOpen(false); // Cierra el Snackbar
-  };
-
-
-  const signOut = () => {
-    if (isAuthenticated) {
-      logout();
-    } else {
-      localStorage.setItem("loggedIn", false);
-      localStorage.setItem("userEmail", "");
-      window.location.reload();
-    }
-  };
-
-  const getUserData = () => {
-    if (isAuthenticated) {
-      return user.name;
-    } else {
-      return localStorage.getItem("userEmail");
-    }
   };
 
   // Agrega el estado mostrarBotonPago al principio del componente
@@ -174,14 +182,14 @@ export default function Navbar() {
     }
   };
 
-
+ 
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{ backgroundColor: '#2196F3' }}>
         <Toolbar>
      
-          <Link to="/"> {/* Agrega el enlace al inicio */}
+          <Link to={localStorage.getItem("userRol") === 'admin' ? "#" : "/"}> {/* Agrega el enlace al inicio */}
             <IconButton
               size="large"
               edge="start"
@@ -204,12 +212,14 @@ export default function Navbar() {
            <Link to={'/login'}><Button color="inherit" >Iniciar sesión</Button></Link>
         }
          
-          <IconButton aria-label="cart" onClick={manejarAbrirModalCarrito}>
+          {localStorage.getItem("userRol") != 'admin' && 
+           <IconButton aria-label="cart" onClick={manejarAbrirModalCarrito}>
 
             <StyledBadge badgeContent={carrito.length} color="secondary">
               <ShoppingCartIcon />
             </StyledBadge>
           </IconButton>
+          }
         </Toolbar>
         <Snackbar
         open={snackbarOpen}
