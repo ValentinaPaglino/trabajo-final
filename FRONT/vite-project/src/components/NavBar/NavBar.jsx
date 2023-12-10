@@ -298,7 +298,7 @@ export default function Navbar() {
                   fontSize: '15px',
                   fontWeight: 600,
                   position: 'relative',
-                  display: mostrarBotonPago ? 'block' : 'none' // Ajusta la visualización según la condición
+                  // display: mostrarBotonPago ? 'block' : 'none' // Ajusta la visualización según la condición
                 }}
               >
                 Finalizar Compra
