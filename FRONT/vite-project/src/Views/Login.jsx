@@ -7,9 +7,9 @@ import { Google } from '@mui/icons-material'
 
 
 
-const Login = () => {
+const Login = (props) => {
 
-  
+  const {isModal, closeLoginModal} = props
 
   const { loginWithRedirect } = useAuth0()
   
@@ -70,8 +70,13 @@ const [errorMessage, setErrorMessage] = useState({
      else { 
       localStorage.setItem("loggedIn", true)
       localStorage.setItem("userEmail", res.mail)
-      history("/")
-      window.location.reload()
+      if (!isModal) {
+        history("/")
+      window.location.reload() }
+      else {
+        closeLoginModal()
+        
+      }
       
     };
     })
