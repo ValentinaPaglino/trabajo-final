@@ -20,7 +20,7 @@ import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import PasarelaDePago from '../Pasarela de pago/PasarelaDePago.jsx';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import Login from '../../Views/Login.jsx';
 import { red } from '@mui/material/colors';
@@ -52,14 +52,18 @@ const modalStyle = {
 export default function Navbar() {
   // Variables de autenticación y pbtención de credenciales
   const { isAuthenticated, user, logout } = useAuth0();
+  const history = useNavigate()
 
 
   const signOut = () => {
     if (isAuthenticated) {
       logout();
+
     } else {
       localStorage.setItem("loggedIn", false);
       localStorage.setItem("userEmail", "");
+      localStorage.setItem("userRol", "")
+      history('/')
       window.location.reload();
     }
   };
@@ -72,6 +76,10 @@ export default function Navbar() {
     }
   };
 
+
+
+
+
 // ------------
 // Modal login para protección de pago
 
@@ -81,7 +89,8 @@ const handleModalLogin = () => setModalLoginAbierto(!modalLoginAbierto)
 
 // ---------------
 
-  const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);
+  const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);  
+  const [prevCartCount, setPrevCartCount] = useState(carrito.length);
   const [modalCarritoAbierto, setModalCarritoAbierto] = useState(false);
   const [modalPagoAbierto, setModalPagoAbierto] = useState(false);
   const [mostrarBotonMercadoPago, setMostrarBotonMercadoPago] = useState(false);
@@ -92,11 +101,8 @@ const handleModalLogin = () => setModalLoginAbierto(!modalLoginAbierto)
     setModalPagoAbierto(true);
   };
   const manejarCerrarModalPago = () => setModalPagoAbierto(false);
-  
- 
-  const [prevCartCount, setPrevCartCount] = useState(carrito.length);
 
- 
+
   const handleSnackbarClose = () => {
   setSnackbarOpen(false); // Cierra el Snackbar
   };
@@ -195,14 +201,14 @@ const handleModalLogin = () => setModalLoginAbierto(!modalLoginAbierto)
     }
   };
 
-
+ 
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{ backgroundColor: '#2196F3' }}>
         <Toolbar>
      
-          <Link to="/"> {/* Agrega el enlace al inicio */}
+          <Link to={localStorage.getItem("userRol") === 'admin' ? "#" : "/"}> {/* Agrega el enlace al inicio */}
             <IconButton
               size="large"
               edge="start"
@@ -225,12 +231,14 @@ const handleModalLogin = () => setModalLoginAbierto(!modalLoginAbierto)
            <Link to={'/login'}><Button color="inherit" >Iniciar sesión</Button></Link>
         }
          
-          <IconButton aria-label="cart" onClick={manejarAbrirModalCarrito}>
+          {localStorage.getItem("userRol") != 'admin' && 
+           <IconButton aria-label="cart" onClick={manejarAbrirModalCarrito}>
 
             <StyledBadge badgeContent={carrito.length} color="secondary">
               <ShoppingCartIcon />
             </StyledBadge>
           </IconButton>
+          }
         </Toolbar>
         <Snackbar
         open={snackbarOpen}

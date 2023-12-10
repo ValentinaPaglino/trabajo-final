@@ -70,7 +70,12 @@ const [errorMessage, setErrorMessage] = useState({
      else { 
       localStorage.setItem("loggedIn", true)
       localStorage.setItem("userEmail", res.mail)
-      if (!isModal) {
+      localStorage.setItem("userRol", res.rol)
+      if (res.rol === 'admin') {
+        history('/administrador')
+        window.location.reload()
+      }
+      else if (!isModal) {
         history("/")
       window.location.reload() }
       else {
