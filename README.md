@@ -6,7 +6,7 @@ Este el proyecto integrador grupal realizado en el curso de Desarrollo Web Avanz
 
 **Visualización y filtrado de productos**
 - El usuario puede visualizar los productos en venta y su información correspondiente. También puede ver el detalle que se despliega como un modal.
-- El usuario puede filtrar libros por categoría y precio máximo, además de elegir si ordenar por precio mayor a menor o menor a mayor
+- El usuario puede filtrar libros por categoría y precio máximo, además de elegir si ordenar por precio de mayor a menor o menor a mayor
 - El usuario puede buscar el libro que desee usando el Buscador
 - Implementamos un paginado para que los libros se visualicen por páginas
 
@@ -17,13 +17,13 @@ Este el proyecto integrador grupal realizado en el curso de Desarrollo Web Avanz
 - El usuario puede recargar la página y mantener la información del carrito sin que se pierdan sus productos seleccionados
 
 **Autenticación**
-- El usuario puede registrarse localmente (se utiliza una base de datos)
+- El usuario puede registrarse localmente (se utiliza para esto una base de datos)
 - Si el usuario tiene una cuenta, puede iniciar sesión
 - El usuario también puede ingresar con su cuenta de Google
 
 **Proceso de compra**
 - En la parte del carrito, el usuario tendrá la opción de generar un botón de pago
-- El usuario únicamente puede realizar una compra si ha iniciado sesión. Si este no es el caso, será redirigido a la pantalla de Login
+- El usuario únicamente puede realizar una compra si ha iniciado sesión. Si este no es el caso, se abrirá un modal con el formulario de Login.
 - Al generar el botón de pago, el usuario podrá hacer click para pagar con una billetera virtual
 
 **Manejo de roles y formulario de administrador**
