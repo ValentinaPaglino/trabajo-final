@@ -37,4 +37,13 @@ Este el proyecto integrador grupal realizado en el curso de Desarrollo Web Avanz
 
 
 ## Tecnologías utilizadas
+![reactlogo](https://github.com/ValentinaPaglino/trabajo-final/assets/87662280/a8ba9d4d-d328-4014-9cd2-f669f4ced322)
+![nodelogo](https://github.com/ValentinaPaglino/trabajo-final/assets/87662280/fb3dd3fa-f859-4f37-b5b0-512796d9e729)
+![expressjs_logo_icon_169185](https://github.com/ValentinaPaglino/trabajo-final/assets/87662280/0d4814cc-2dae-4bfc-94fb-21353011e379)
+![sequelize](https://github.com/ValentinaPaglino/trabajo-final/assets/87662280/ab87a22f-5693-4526-ab6d-ca3340f513e8)
+![postgre](https://github.com/ValentinaPaglino/trabajo-final/assets/87662280/9d9e247a-296a-4ce9-87bd-19d95d589202)
+![materialui](https://github.com/ValentinaPaglino/trabajo-final/assets/87662280/fc253b53-5be9-43d0-8fa0-e21f19f45014)
+![cloudinary_web_favicon](https://github.com/ValentinaPaglino/trabajo-final/assets/87662280/f70bff58-20ae-4a51-aa6e-03c4db8adec1)
+![auth0](https://github.com/ValentinaPaglino/trabajo-final/assets/87662280/983169a7-1f0e-448e-aeb4-12f596bb68cc)
 
+## Demostración del proyecto
