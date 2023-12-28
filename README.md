@@ -47,3 +47,5 @@ Este el proyecto integrador grupal realizado en el curso de Desarrollo Web Avanz
 ![auth0](https://github.com/ValentinaPaglino/trabajo-final/assets/87662280/983169a7-1f0e-448e-aeb4-12f596bb68cc)
 
 ## Demostración del proyecto
+https://github.com/ValentinaPaglino/trabajo-final/assets/87662280/8191a8f3-9001-48d1-8562-9f0e8dd65e97
+
